@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PW-Skills-Blog | Read Blog</title>
+    <link rel="stylesheet" href="Style.css">
+    <style>
+        body {
+            background-color: white;
+        }
+        .read_img {
+            max-width: 100%;
+            height: auto;
+        }
+        .btn {
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1 id="Heading">Read Blog</h1>
+    <br><br>
+    <div class="container" id="readBlogContainer"></div>
+
+    <script>
+        // Heading H1 title
+        document.getElementById('Heading').innerText = "Read Blog";
+
+        // Get the blog index from the URL query parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const blogIndex = urlParams.get('index');
+
+        // Check if the blog index is valid and display the blog content
+        const savedBlogs = JSON.parse(localStorage.getItem('blogs')) || [];
+        if (blogIndex !== null && blogIndex >= 0 && blogIndex < savedBlogs.length) {
+            const blog = savedBlogs[blogIndex];
+            displayBlogContent(blog);
+        }
+
+        // Function to display the full blog content
+        function displayBlogContent(blog) {
+            const readBlogContainer = document.getElementById('readBlogContainer');
+            readBlogContainer.innerHTML = `
+                <div class="read-blog-card">
+                    <h1 style="text-align:center;color:red;text-decoration:underline">${blog.title}</h1>
+                    <img src="${blog.imageUrl}" alt="" class="read_img">
+                    <p><b> ${blog.descriptionshort}</b></p>
+                    <p>${blog.descriptionlong}</p>
+                    <button onclick="deleteBlog(${blogIndex})" class="btn">Delete Blog</button>
+                    <button onclick="backToHomepage()" class="btn">Back to Homepage</button>
+                </div>
+            `;
+        }
+
+        // Function to delete the blog and go back to the homepage
+        function deleteBlog(index) {
+            savedBlogs.splice(index, 1);
+            localStorage.setItem('blogs', JSON.stringify(savedBlogs));
+            window.location.href = './HomePage.html';
+        }
+
+        // Function to go back to the homepage
+        function backToHomepage() {
+            window.location.href = './HomePage.html';
+        }
+    </script>
+</body>
+</html>

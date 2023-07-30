@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PW-Skills-Blog | Home Page</title>
+    <link rel="stylesheet" href="Style.css">
+</head>
+<body>
+    <h1 id="Heading">Welcome to PW SKILLS Blog Post</h1>
+
+    <button id="add" title="Add new Blog" onclick="openForm()">+</button>
+    
+    <div class="containerH" id="blogContainer">
+
+
+    </div>
+
+    <!-- Blog Entry Form (Modal) -->
+    <div id="blogForm" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeForm()">&times;</span>
+            <h2 style="color: red; text-align: center;">Add New Blog</h2>
+            <input type="text" id="blogImageUrl" placeholder="Enter URL of image">
+            <input type="text" id="blogTitle" placeholder="Enter blog title">
+            <input type="text" id="blogDescriptionshort" placeholder="Enter short description">
+            <textarea id="blogDescriptionlong" placeholder="Enter long description" rows="10"></textarea>
+            <button onclick="addBlog()" id="addBlog">Add Blog</button>
+        </div>
+    </div>
+
+    <script>
+        // Check if there are any blogs stored in local storage
+        const savedBlogs = JSON.parse(localStorage.getItem('blogs')) || [];
+
+        // Function to add a new blog to the local storage
+        function addBlog() {
+    const title = document.getElementById('blogTitle').value;
+    const descriptionshort = document.getElementById('blogDescriptionshort').value;
+    const descriptionlong = document.getElementById('blogDescriptionlong').value;
+    const imageUrl = document.getElementById('blogImageUrl').value;
+
+    if (title.trim() !== '' && descriptionshort.trim() !== '' && descriptionlong.trim() !== ''){
+        const blog = { title, descriptionshort, descriptionlong, imageUrl }; // Add imageUrl property
+        savedBlogs.push(blog);
+        localStorage.setItem('blogs', JSON.stringify(savedBlogs));
+        displayBlogs();
+        closeForm();
+    }
+}
+        // Function to display the saved blogs on the page
+        function displayBlogs() {
+    const blogContainer = document.getElementById('blogContainer');
+    blogContainer.innerHTML = '';
+
+    savedBlogs.forEach((blog, index) => {
+        const blogCard = `
+    <div class="card">
+        <img src="${blog.imageUrl}" alt="" class="blog-img">
+        <div class="title">${blog.title}</div>
+        <div class="descriptionshort">${blog.descriptionshort}</div>
+       
+        <button class="read-more-btn" onclick="openBlog(${index})">Read More</button>
+    </div>
+`;
+        blogContainer.innerHTML += blogCard;
+    });
+}
+
+
+        // Function to open the blog form
+        function openForm() {
+            document.getElementById('blogForm').style.display = 'block';
+        }
+
+        // Function to close the blog form
+        function closeForm() {
+            document.getElementById('blogForm').style.display = 'none';
+            document.getElementById('blogTitle').value = '';
+            document.getElementById('blogDescriptionshort').value = '';
+            document.getElementById('blogDescriptionlong').value = '';
+        }
+
+        // Function to open a saved blog in a new window
+        function openBlog(index) {
+            const blogWindow = window.open('./ReadBlogPage.html?index=' + index, '_self', 'width=500,height=400');
+            blogWindow.focus();
+        }
+
+        // Display the saved blogs on page load
+        displayBlogs();
+    </script>
+</body>
+</html>
